@@ -10,6 +10,46 @@ use Illuminate\Support\Facades\Auth;
 
 class UserPreferencesController extends Controller
 {
+    /**
+     * @OA\Post(
+     *     path="/api/preferences",
+     *     summary="Set user preferences",
+     *     description="Save preferred sources, categories, and authors for the authenticated user.",
+     *     operationId="setPreferences",
+     *     tags={"User Preferences"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="preferred_sources", type="array", @OA\Items(type="string"), example={"source1", "source2"}),
+     *             @OA\Property(property="preferred_categories", type="array", @OA\Items(type="string"), example={"news", "technology"}),
+     *             @OA\Property(property="preferred_authors", type="array", @OA\Items(type="string"), example={"author1", "author2"})
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Preferences saved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Preferences saved successfully"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="preferred_sources", type="array", @OA\Items(type="string")),
+     *                 @OA\Property(property="preferred_categories", type="array", @OA\Items(type="string")),
+     *                 @OA\Property(property="preferred_authors", type="array", @OA\Items(type="string"))
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Failed to save preferences",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Failed to save preferences"),
+     *             @OA\Property(property="error", type="string", example="Error message")
+     *         )
+     *     )
+     * )
+     */
     public function setPreferences(Request $request)
     {
         try {
@@ -44,6 +84,46 @@ class UserPreferencesController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/preferences",
+     *     summary="Get user preferences",
+     *     description="Retrieve the preferred sources, categories, and authors of the authenticated user.",
+     *     operationId="getPreferences",
+     *     tags={"User Preferences"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Preferences retrieved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Preferences retrieved successfully"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="preferred_sources", type="array", @OA\Items(type="string")),
+     *                 @OA\Property(property="preferred_categories", type="array", @OA\Items(type="string")),
+     *                 @OA\Property(property="preferred_authors", type="array", @OA\Items(type="string"))
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No preferences found for this user",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="No preferences found for this user")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Failed to retrieve preferences",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Failed to retrieve preferences"),
+     *             @OA\Property(property="error", type="string", example="Error message")
+     *         )
+     *     )
+     * )
+     */
     public function getPreferences()
     {
         try {
@@ -74,6 +154,54 @@ class UserPreferencesController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/personalized-feed",
+     *     summary="Get personalized feed",
+     *     description="Retrieve a personalized feed of articles based on user preferences.",
+     *     operationId="personalizedFeed",
+     *     tags={"User Preferences"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Personalized feed retrieved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Personalized feed retrieved successfully"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="current_page", type="integer", example=1),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                         @OA\Property(property="id", type="integer", example=1),
+     *                         @OA\Property(property="title", type="string", example="Article title"),
+     *                         @OA\Property(property="content", type="string", example="Article content"),
+     *                         @OA\Property(property="category", type="string", example="news"),
+     *                         @OA\Property(property="source", type="string", example="source name"),
+     *                         @OA\Property(property="published_at", type="string", format="date-time", example="2024-11-01T12:34:56Z")
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No preferences set for personalized feed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="No preferences set for personalized feed.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Failed to retrieve personalized feed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Failed to retrieve personalized feed"),
+     *             @OA\Property(property="error", type="string", example="Error message")
+     *         )
+     *     )
+     * )
+     */
     public function personalizedFeed()
     {
         try {
