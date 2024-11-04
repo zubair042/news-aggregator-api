@@ -1,66 +1,104 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## News Aggregator API
 
-## About Laravel
+The News Aggregator API is a RESTful API built with Laravel that allows users to aggregate articles from various news sources. It includes user authentication, article management, personalized news feeds, and more.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **User Authentication**: Registration, login, logout, and password reset using Laravel Sanctum for token-based authentication.
+- **Article Management**:
+  - Fetch articles with pagination.
+  - Search articles by keyword, date, category, and source.
+  - Retrieve detailed information about individual articles.
+- **User Preferences**: 
+  - Manage preferences for news sources, categories, and authors.
+  - Access a personalized news feed based on preferences.
+- **Data Aggregation**:
+  - Schedule commands to fetch articles from selected news APIs and store them in the local database.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Installation
 
-## Learning Laravel
+### Prerequisites
+- Docker
+    - Download and Install: Visit the Docker official page, select your OS, and follow the installation steps.
+    - Verify Installation: Open a terminal and run:
+       ```bash
+       docker --version
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Setup Instructions
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. **Clone the repository**:
+   - Clone the repo
+   ```bash
+   cd news-aggregator-api
 
-## Laravel Sponsors
+2. **Configure the .env file:**:
+    - After cloning the repository, open the .env file in the project’s root directory and add your API keys for news sources:
+      ```plaintext
+      NEWS_API_KEY={Your News API Key}
+      GUARDIAN_API_KEY={Your Guardian API Key}
+      NYTIMES_API_KEY={Your New York Times API Key}
+      ```
+   
+3. **Build and run the Docker containers:**:
+   ```bash
+   docker-compose up --build -d
+   
+4. **Access the application:**:
+   - Open your browser and navigate to **http://localhost:9001**
+     
+5. **Access the database:**:
+   - Open your browser and navigate to **http://localhost:8080**
+   - Use the following credentials:
+       - Username: **root**
+       - Password: **123**
+         
+6. **Fetch News Articles from APIs:**:
+   - Access the container:
+       ```bash
+       docker ps -a
+       docker exec -it <container-id or container-name> bash
+   - Run the following command to fetch articles from news sources:
+       ```bash
+       php artisan fetch:articles
+   - This will insert article records into the articles table
+     
+4. **For API documentation, visit:**:
+- Access all APIs at: **http://localhost:9001/api/documentation**
+- Register or log in to obtain a token.
+- Paste the token in the Swagger authorization section to access the API records.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Feature Testing
 
-## Contributing
+To execute the feature tests:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. **Create a testing database**:
+   - Set up a new database in phpmyadmin.
+     
+2. **Update the `.env.testing` file**:
+   - Configure it to use the testing database:
+     ```plaintext
+     DB_CONNECTION=mysql
+     DB_DATABASE=your_testing_database
+     DB_USERNAME=root
+     DB_PASSWORD=123
+     ```
+3. **Access the application container**:
+   ```bash
+   docker ps -a
+   docker exec -it <app-container-name or app-container-id> bash
+   
+4. **Access the application container**:
+   ```bash
+   php artisan test
 
-## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Conclusion
+The News Aggregator API offers a robust and customizable platform for aggregating and managing articles from multiple sources. With features such as user-specific preferences, comprehensive article search, and efficient data aggregation, it provides an efficient solution for users seeking consolidated news access. Contributions are always welcome, as enhancements and optimizations will continue to improve the functionality and usability of the API.
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
