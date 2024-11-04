@@ -7,6 +7,7 @@ use App\Models\Article;
 use App\Models\UserPreference;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\JsonResponse;
 
 class UserPreferencesController extends Controller
 {
@@ -50,7 +51,7 @@ class UserPreferencesController extends Controller
      *     )
      * )
      */
-    public function setPreferences(Request $request)
+    public function setPreferences(Request $request): JsonResponse
     {
         try {
             $request->validate([
@@ -124,7 +125,7 @@ class UserPreferencesController extends Controller
      *     )
      * )
      */
-    public function getPreferences()
+    public function getPreferences(): JsonResponse
     {
         try {
             $preferences = UserPreference::where('user_id', Auth::id())->first();
@@ -202,7 +203,7 @@ class UserPreferencesController extends Controller
      *     )
      * )
      */
-    public function personalizedFeed()
+    public function personalizedFeed(): JsonResponse
     {
         try {
             $preferences = UserPreference::where('user_id', Auth::id())->first();

@@ -6,6 +6,7 @@ use App\Helpers\ResponseHelper;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 
 class ArticleController extends Controller
 {
@@ -75,7 +76,7 @@ class ArticleController extends Controller
      *     )
      * )
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         try {
             $articles = Article::query();
@@ -160,7 +161,7 @@ class ArticleController extends Controller
      *     )
      * )
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
         try {
             $article = Article::findOrFail($id);
