@@ -36,7 +36,13 @@ class FetchArticles extends Command
         $this->info('Articles fetched successfully!');
     }
 
-    private function fetchFromNewsAPI()
+    /**
+     * Fetches the latest articles from the News API.
+     *
+     * @return void
+     * @throws \Exception
+     */
+    private function fetchFromNewsAPI(): void
     {
         try {
             $response = Http::get('https://newsapi.org/v2/top-headlines', [
@@ -62,7 +68,13 @@ class FetchArticles extends Command
         }
     }
 
-    private function fetchFromTheGuardian()
+    /**
+     * Fetches the latest articles from the guardian API.
+     *
+     * @return void
+     * @throws \Exception
+     */
+    private function fetchFromTheGuardian(): void
     {
         try {
             $response = Http::get('https://content.guardianapis.com/search', [
@@ -88,7 +100,13 @@ class FetchArticles extends Command
         }
     }
 
-    private function fetchFromNYTimes()
+    /**
+     * Fetches the latest articles from the New York Times Top Stories API.
+     *
+     * @return void
+     * @throws \Exception
+     */
+    private function fetchFromNYTimes(): void
     {
         try {
             $response = Http::get('https://api.nytimes.com/svc/topstories/v2/home.json', [
@@ -113,7 +131,18 @@ class FetchArticles extends Command
         }
     }
 
-    private function saveArticle($title, $content, $author, $source, $category, $publishedAt)
+    /**
+     * Save an article to the database, updating if the title already exists.
+     *
+     * @param string $title
+     * @param string|null $content
+     * @param string|null $author
+     * @param string|null $source
+     * @param string|null $category
+     * @param string|null $publishedAt
+     * @return void
+     */
+    private function saveArticle(string $title, ?string $content, ?string $author, ?string $source, ?string $category, ?string $publishedAt): void
     {
         $maxContentLength = 1024 * 1024; // 1 MB limit for content
         if (strlen($content) > $maxContentLength) {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ResponseHelper;
+use App\Http\Requests\UserPreferences\UserPreferencesRequest;
 use App\Models\Article;
 use App\Models\UserPreference;
 use Illuminate\Http\Request;
@@ -51,15 +52,9 @@ class UserPreferencesController extends Controller
      *     )
      * )
      */
-    public function setPreferences(Request $request): JsonResponse
+    public function setPreferences(UserPreferencesRequest $request): JsonResponse
     {
         try {
-            $request->validate([
-                'preferred_sources' => 'nullable|array',
-                'preferred_categories' => 'nullable|array',
-                'preferred_authors' => 'nullable|array',
-            ]);
-
             $preferences = UserPreference::updateOrCreate(
                 ['user_id' => Auth::id()],
                 [

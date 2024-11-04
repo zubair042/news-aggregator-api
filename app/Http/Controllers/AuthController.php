@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ResponseHelper;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Auth\UpdatePasswordRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -47,15 +50,9 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function register(Request $request): JsonResponse
+    public function register(RegisterRequest $request): JsonResponse
     {
         try {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|min:8|confirmed',
-            ]);
-
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -69,14 +66,6 @@ class AuthController extends Controller
                 'User registered successfully',
                 ['user' => $user, 'access_token' => $token, 'token_type' => 'Bearer'],
                 201
-            );
-        } catch (ValidationException $e) {
-            return ResponseHelper::apiResponse(
-                false,
-                'Validation failed',
-                null,
-                422,
-                $e->errors()
             );
         } catch (\Exception $e) {
             return ResponseHelper::apiResponse(
@@ -121,14 +110,9 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function login(Request $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
         try {
-            $request->validate([
-                'email' => 'required|string|email',
-                'password' => 'required|string',
-            ]);
-
             $user = User::where('email', $request->email)->first();
 
             if (!$user || !Hash::check($request->password, $user->password)) {
@@ -148,14 +132,6 @@ class AuthController extends Controller
                 true,
                 'Login successful',
                 ['user' => $user, 'access_token' => $token, 'token_type' => 'Bearer']
-            );
-        } catch (ValidationException $e) {
-            return ResponseHelper::apiResponse(
-                false,
-                'Validation failed',
-                null,
-                422,
-                $e->errors()
             );
         } catch (\Exception $e) {
             return ResponseHelper::apiResponse(
@@ -256,14 +232,9 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function updatePassword(Request $request): JsonResponse
+    public function updatePassword(UpdatePasswordRequest $request): JsonResponse
     {
         try {
-            $request->validate([
-                'current_password' => 'required|string',
-                'new_password' => 'required|string|min:8|confirmed',
-            ]);
-
             $user = $request->user();
 
             // Check if the current password is correct
@@ -286,14 +257,6 @@ class AuthController extends Controller
                 'Password has been updated successfully'
             );
 
-        } catch (ValidationException $e) {
-            return ResponseHelper::apiResponse(
-                false,
-                'Validation failed',
-                null,
-                422,
-                $e->errors()
-            );
         } catch (\Exception $e) {
             return ResponseHelper::apiResponse(
                 false,
